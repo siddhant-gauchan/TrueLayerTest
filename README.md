@@ -11,8 +11,8 @@
 
   }
 ```
-2. Install ngrok and  setup callback url in https://console.truelayer.com/settings for 
-http://localhost:58606/ 
+2. Install ngrok and  setup callback url  for 
+http://localhost:58606/. Add the generated URL http://*.ngrok.io/callback in TrueLayer DataApi settings.
 ```
 ngrok http -host-header=localhost 58606
 ```
