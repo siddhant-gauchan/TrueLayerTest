@@ -29,8 +29,8 @@ Update the appsettings __RedirectUri__ with  http://<random>.ngrok.io/callback
 8.Execute endpoints from SwaggerUI   
   
 # UnitTest
-1.Unit test is written using MSTest and Moq.
-2.Right click the Test Project and Run Unit Test
+1. Unit test is written using MSTest and Moq.
+2. Right click the Test Project and Run Unit Test
 
 # UserInfo Persistance
 Use CookieAuthentication Scheme to Persist userInfo. Stores all user info in ClaimsIdentity. It relies on cookie security mechanism.
