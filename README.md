@@ -24,9 +24,8 @@ Update the appsettings __RedirectUri__ with  http://*.ngrok.io/callback
 5. After sucessfull login. it will redirect to http://*.ngrok.io/callback. 
 6. Copy the acccessToken as shown below and Authorize for Bearer 
   ![alt text](https://github.com/siddhant-gauchan/TrueLayerTest/blob/master/image/accesstoken.PNG "Access Token")
-7.Go back to previous http://localhost:58606/swagger and authorize using __BearerScheme__ 
-
-8.Execute endpoints from SwaggerUI   
+7. Go back to previous http://localhost:58606/swagger and authorize using __Bearer Scheme__ 
+8. Execute endpoints from SwaggerUI   
   
 # UnitTest
 1. Unit test is written using MSTest and Moq.
