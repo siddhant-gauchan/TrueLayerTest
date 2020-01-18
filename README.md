@@ -28,3 +28,30 @@ Update the appsettings __RedirectUri__ with  http://<random>.ngrok.io/callback
 
 8.Execute endpoints from SwaggerUI   
   
+# UnitTest
+1.Unit test is written using MSTest and Moq.
+2.Right click the Test Project and Run Unit Test
+
+#UserInfo Persistance
+Use CookieAuthentication Scheme to Persist userInfo. Stores all user info in ClaimsIdentity. It relies on cookie security mechanism.
+You can make the cookie using HttpOnly to avoid xss attack
+
+```
+var user = storage.Get<List<UserModel>>("userInfo");
+                    
+                    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
+                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user[0].FullName));
+                    identity.AddClaim(new Claim(ClaimTypes.Name, user[0].FullName));
+                    identity.AddClaim(new Claim(ClaimTypes.Email, string.Join(",", user[0].Emails)));
+                    identity.AddClaim(new Claim(ClaimTypes.MobilePhone, string.Join(",",user[0].Phones)));
+                    identity.AddClaim(new Claim(ClaimTypes.Expiration, string.Join(",", accessToken.ExpiryDate)));
+                    identity.AddClaim(new Claim("RefreshToken", string.Join(",", accessToken.RefreshToken)));
+                    var principal = new ClaimsPrincipal(identity);
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, 
+                    new AuthenticationProperties 
+                    { 
+                        IsPersistent = true, 
+                        ExpiresUtc = DateTime.UtcNow.AddMinutes(20) 
+                    });
+```
