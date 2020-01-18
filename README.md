@@ -33,7 +33,7 @@ Update the appsettings __RedirectUri__ with  http://*.ngrok.io/callback
 
 # UserInfo Persistance
 Use CookieAuthentication Scheme to Persist userInfo. Stores all user info in ClaimsIdentity. It relies on cookie security mechanism.
-You can make the cookie using HttpOnly to avoid xss attack
+You can use HttpOnly cookie to avoid xss attack
 
 ```
 var user = storage.Get<List<UserModel>>("userInfo");
