@@ -18,7 +18,7 @@ ngrok http -host-header=localhost 58606
 ```
 Update the appsettings __RedirectUri__ with  http://*.ngrok.io/callback
  
-3. Start Project in VS. It will launch http://localhost:58606/swagger  and click Authorize. It will lead to the following screen below:
+3. Start Project in VS and Run. It will launch http://localhost:58606/swagger,click Authorize. It will lead to the following screen below:
 ![alt text](https://github.com/siddhant-gauchan/TrueLayerTest/blob/master/image/authorize.PNG "Authorize").
 4. Click Authorize for Oauth flow and it will be redirected to truleLayer auth url. Enter the login username/password.
 5. After sucessfull login. it will redirect to http://*.ngrok.io/callback. 
