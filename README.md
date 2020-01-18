@@ -32,7 +32,7 @@ Update the appsettings __RedirectUri__ with  http://<random>.ngrok.io/callback
 1.Unit test is written using MSTest and Moq.
 2.Right click the Test Project and Run Unit Test
 
-#UserInfo Persistance
+# UserInfo Persistance
 Use CookieAuthentication Scheme to Persist userInfo. Stores all user info in ClaimsIdentity. It relies on cookie security mechanism.
 You can make the cookie using HttpOnly to avoid xss attack
 
