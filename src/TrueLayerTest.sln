@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrulayerApiTest", "TrueLayerTest\TrulayerApiTest.csproj", "{DD67E0C1-0B17-448B-9955-A48D88155EDC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{B69B8F6C-046E-40E4-A84D-A9FA0949E13A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD67E0C1-0B17-448B-9955-A48D88155EDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD67E0C1-0B17-448B-9955-A48D88155EDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD67E0C1-0B17-448B-9955-A48D88155EDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD67E0C1-0B17-448B-9955-A48D88155EDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B69B8F6C-046E-40E4-A84D-A9FA0949E13A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B69B8F6C-046E-40E4-A84D-A9FA0949E13A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B69B8F6C-046E-40E4-A84D-A9FA0949E13A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B69B8F6C-046E-40E4-A84D-A9FA0949E13A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE6F3860-1E1F-4B66-A67B-44D858DFF0E1}
+	EndGlobalSection
+EndGlobal

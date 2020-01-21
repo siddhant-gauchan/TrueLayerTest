@@ -1,7 +1,7 @@
-﻿using TrulayerApiTest;
-using TrulayerApiTest.Handlers;
-using TrulayerApiTest.Helpers;
-using TrulayerApiTest.Model;
+﻿using InterviewSiddhant_Gauchan;
+using InterviewSiddhant_Gauchan.Handlers;
+using InterviewSiddhant_Gauchan.Helpers;
+using InterviewSiddhant_Gauchan.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
-﻿using TrulayerApiTest.Handlers;
-using TrulayerApiTest.Helpers;
-using TrulayerApiTest.Services;
+﻿using InterviewSiddhant_Gauchan.Handlers;
+using InterviewSiddhant_Gauchan.Helpers;
+using InterviewSiddhant_Gauchan.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
