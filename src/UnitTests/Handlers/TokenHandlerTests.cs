@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using TrulayerApiTest.Handlers.Query;
 
 namespace UnitTests.Handlers
 {
@@ -57,11 +58,11 @@ namespace UnitTests.Handlers
             mockHttpHelpers.Setup(x => x.GetClient(mockIoptions.Object.Value.OAuthServerUrl)).Returns(httpClient);
 
             var handler = new TokenHandler(mockHttpHelpers.Object, mockIoptions.Object, mockStorage.Object, mockUserService.Object);
-
+            
             //act
-            var response = await handler.GetToken(accessCode);
+             var result = await handler.Handle(new GetTokenQuery { AccessCode = accessCode }, It.IsAny<CancellationToken>());
             //assert
-            Assert.IsTrue(!string.IsNullOrEmpty(response.AccessToken));
+            Assert.IsTrue(!string.IsNullOrEmpty(result.Response.AccessToken));
             
         }
         
@@ -104,9 +105,9 @@ namespace UnitTests.Handlers
             var handler = new TokenHandler(mockHttpHelpers.Object, mockIoptions.Object, mockStorage.Object, mockUserService.Object);
 
             //act
-            var response = await handler.GetToken(accessCode);
+            var result = await handler.Handle(new GetTokenQuery { AccessCode = accessCode }, It.IsAny<CancellationToken>());
             //assert
-            Assert.IsTrue(string.IsNullOrEmpty(response.AccessToken));
+            Assert.IsTrue(result.Response==null);
 
         }
 

@@ -5,6 +5,9 @@ using InterviewSiddhant_Gauchan.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using TrulayerApiTest.Handlers.Query;
 
 namespace UnitTests.Handlers
 {
@@ -12,7 +15,7 @@ namespace UnitTests.Handlers
     public class TransactionSummaryHandlerTests
     {
         [TestMethod]
-        public void ShouldReturnListofTransactionSummaryViewModelWithDataWhenStorageHasData()
+        public  async Task ShouldReturnListofTransactionSummaryViewModelWithDataWhenStorageHasData()
         {
                         
             var mockStorage = new Mock<IStorage>();
@@ -45,12 +48,12 @@ namespace UnitTests.Handlers
             mockStorage.Setup(x => x.Get<List<TransactionViewModel>>("transactionViewModel")).Returns(transactionViewModel);
             var handler = new TransactionSummaryHandler(mockStorage.Object);
 
-            var response = handler.Get();
-            Assert.IsTrue(response.Count>0);
-            Assert.IsInstanceOfType(response, typeof(List<TransactionSummaryViewModel>));
+            var result = await handler.Handle(It.IsAny<GetTransactionSummaryQuery>(), It.IsAny<CancellationToken>());
+            Assert.IsTrue(result.Response.Count>0);
+            Assert.IsInstanceOfType(result.Response, typeof(List<TransactionSummaryViewModel>));
         }
         [TestMethod]
-        public void ShouldReturnListofTransactionSummaryViewModelGroupedByCategoryWithMaxMinandAverageAmountWhenStorageHasData()
+        public async Task ShouldReturnListofTransactionSummaryViewModelGroupedByCategoryWithMaxMinandAverageAmountWhenStorageHasData()
         {
 
             var mockStorage = new Mock<IStorage>();
@@ -98,19 +101,19 @@ namespace UnitTests.Handlers
             mockStorage.Setup(x => x.Get<List<TransactionViewModel>>("transactionViewModel")).Returns(transactionViewModel);
             var handler = new TransactionSummaryHandler(mockStorage.Object);
 
-            var response = handler.Get();
-            Assert.IsTrue(response.Count > 0);
-            Assert.IsTrue(response[0].TransactionSummary[0].AverageAmount == "10.33");
-            Assert.IsTrue(response[0].TransactionSummary[0].MinAmount == "1");
-            Assert.IsTrue(response[0].TransactionSummary[0].MaxAmount == "20");
-            Assert.IsTrue(response[0].TransactionSummary[0].TransactionCategory == "testCategory");
+            var result = await handler.Handle(It.IsAny<GetTransactionSummaryQuery>(), It.IsAny<CancellationToken>());
+            Assert.IsTrue(result.Response.Count > 0);
+            Assert.IsTrue(result.Response[0].TransactionSummary[0].AverageAmount == "10.33");
+            Assert.IsTrue(result.Response[0].TransactionSummary[0].MinAmount == "1");
+            Assert.IsTrue(result.Response[0].TransactionSummary[0].MaxAmount == "20");
+            Assert.IsTrue(result.Response[0].TransactionSummary[0].TransactionCategory == "testCategory");
 
-            Assert.IsInstanceOfType(response, typeof(List<TransactionSummaryViewModel>));
+            Assert.IsInstanceOfType(result.Response, typeof(List<TransactionSummaryViewModel>));
         }
         
 
         [TestMethod]
-        public void ShouldReturnTransactionSummaryViewModelWithOutDataWhenStorageHasNoData()
+        public async Task ShouldReturnTransactionSummaryViewModelWithOutDataWhenStorageHasNoData()
         {
 
             var mockStorage = new Mock<IStorage>();
@@ -118,9 +121,9 @@ namespace UnitTests.Handlers
             mockStorage.Setup(x => x.Get<List<TransactionViewModel>>("transactionViewModel")).Returns(new List<TransactionViewModel>());
             var handler = new TransactionSummaryHandler(mockStorage.Object);
 
-            var response = handler.Get();
-            Assert.IsTrue(response.Count == 0);
-            Assert.IsInstanceOfType(response, typeof(List<TransactionSummaryViewModel>));
+            var result = await handler.Handle(It.IsAny<GetTransactionSummaryQuery>(), It.IsAny<CancellationToken>());
+            Assert.IsTrue(result.Response.Count == 0);
+            Assert.IsInstanceOfType(result.Response, typeof(List<TransactionSummaryViewModel>));
         }
 
 

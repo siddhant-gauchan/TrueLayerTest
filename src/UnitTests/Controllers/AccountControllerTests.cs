@@ -3,6 +3,7 @@ using InterviewSiddhant_Gauchan.Controllers;
 using InterviewSiddhant_Gauchan.Handlers;
 using InterviewSiddhant_Gauchan.Helpers;
 using InterviewSiddhant_Gauchan.Model;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,9 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
+using TrulayerApiTest.Handlers.Query;
 
 namespace UnitTests
 {
@@ -28,9 +31,10 @@ namespace UnitTests
             var mockHandler = new Mock<ITokenHandler>();
             var mockIoptions = new Mock<IOptions<Config>>();
             var mockStorage = new Mock<IStorage>();
+            var mockMediator = new Mock<IMediator>();
             mockIoptions.Setup(x => x.Value).Returns(new Config { OAuthServerUrl = "http://auth.test.com", ClientId = "testclient", ClientSecret = "testSecret" });
 
-            var controller = new AccountController(mockHandler.Object, mockIoptions.Object,mockStorage.Object);
+            var controller = new AccountController(mockHandler.Object, mockIoptions.Object,mockStorage.Object,mockMediator.Object);
             //act
             var response = controller.Login() as RedirectResult;
 
@@ -47,8 +51,9 @@ namespace UnitTests
             var mockIoptions = new Mock<IOptions<Config>>();
             var mockStorage = new Mock<IStorage>();
             mockIoptions.Setup(x => x.Value).Throws(new System.Exception());
+            var mockMediator = new Mock<IMediator>();
 
-            var controller = new AccountController(mockHandler.Object, mockIoptions.Object, mockStorage.Object);
+            var controller = new AccountController(mockHandler.Object, mockIoptions.Object, mockStorage.Object,mockMediator.Object);
             //act
             var response = controller.Login() as ObjectResult;
 
@@ -66,7 +71,8 @@ namespace UnitTests
             var mockHandler = new Mock<ITokenHandler>();
             var mockIoptions = new Mock<IOptions<Config>>();
             var mockStorage = new Mock<IStorage>();
-            var controller = new AccountController(mockHandler.Object, mockIoptions.Object, mockStorage.Object);
+            var mockMediator = new Mock<IMediator>();
+            var controller = new AccountController(mockHandler.Object, mockIoptions.Object, mockStorage.Object,mockMediator.Object);
             //act
             var response = await controller.Callback(testCallbackCode) as ObjectResult;
             
@@ -83,7 +89,7 @@ namespace UnitTests
             var mockHandler = new Mock<ITokenHandler>();
             var mockIoptions = new Mock<IOptions<Config>>();
             var mockStorage = new Mock<IStorage>();
-            mockHandler.Setup(x => x.GetToken(testCallbackCode)).ReturnsAsync(new TokenDetails { AccessToken = "testAccessToken", RefreshToken="testRefreshToken",ExpiryDate= DateTime.Now.AddMinutes(30) });
+            var mockMediator = new Mock<IMediator>();
             mockStorage.Setup(x => x.Get<List<UserModel>>("userInfo")).Returns(new List<UserModel>{new UserModel
             {
                 Addresses = new List<AddressModel>
@@ -107,14 +113,16 @@ namespace UnitTests
             serviceProviderMock
                 .Setup(_ => _.GetService(typeof(IAuthenticationService)))
                 .Returns(authServiceMock.Object);
-           
-            var controller = new AccountController(mockHandler.Object, mockIoptions.Object, mockStorage.Object)
+            mockMediator.Setup(x => x.Send(It.IsAny<GetTokenQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new TokenRespose { Response= new TokenDetails { AccessToken = "testAccessToken", RefreshToken = "testRefreshToken", ExpiryDate = DateTime.Now.AddMinutes(30) } });
+            
+            
+            var controller = new AccountController(mockHandler.Object, mockIoptions.Object, mockStorage.Object, mockMediator.Object)
             {
                 ControllerContext = new ControllerContext
                 {
                     HttpContext = new DefaultHttpContext
                     {
-                        // How mock RequestServices?
+                        
                         RequestServices = serviceProviderMock.Object
                     }
                 }
@@ -140,9 +148,10 @@ namespace UnitTests
             var mockHandler = new Mock<ITokenHandler>();
             var mockIoptions = new Mock<IOptions<Config>>();
             var mockStorage = new Mock<IStorage>();
-            mockHandler.Setup(x => x.GetToken(testCallbackCode)).ThrowsAsync(new System.Exception());
+            var mockMediator = new Mock<IMediator>();         
 
-            var controller = new AccountController(mockHandler.Object, mockIoptions.Object, mockStorage.Object);
+            mockMediator.Setup(x => x.Send(It.IsAny<GetTokenQuery>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
+            var controller = new AccountController(mockHandler.Object, mockIoptions.Object, mockStorage.Object,mockMediator.Object);
             //act
             var response = await controller.Callback(testCallbackCode) as ObjectResult;
             var result = response.Value as TokenDetails;

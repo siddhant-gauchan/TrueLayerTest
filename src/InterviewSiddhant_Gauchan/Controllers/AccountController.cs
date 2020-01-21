@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using InterviewSiddhant_Gauchan.Handlers;
 using InterviewSiddhant_Gauchan.Helpers;
 using InterviewSiddhant_Gauchan.Model;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using TrulayerApiTest.Handlers.Query;
 
 namespace InterviewSiddhant_Gauchan.Controllers
 {
@@ -20,12 +22,14 @@ namespace InterviewSiddhant_Gauchan.Controllers
         private ITokenHandler tokenHandler;
         private readonly IOptions<Config> config;
         private readonly IStorage storage;
+        private readonly IMediator mediator;
 
-        public AccountController(ITokenHandler tokenHandler, IOptions<Config> config,IStorage storage)
+        public AccountController(ITokenHandler tokenHandler, IOptions<Config> config,IStorage storage, IMediator mediator)
         {
             this.tokenHandler = tokenHandler;
             this.config = config;
             this.storage = storage;
+            this.mediator = mediator;
         }
 
         [Route("Account/Login")]
@@ -67,7 +71,7 @@ namespace InterviewSiddhant_Gauchan.Controllers
                 if (string.IsNullOrWhiteSpace(code))
                     return Ok("error");
                 {
-                    var accessToken = await tokenHandler.GetToken(code);
+                    var result = await mediator.Send(new GetTokenQuery { AccessCode = code});                   
                     var user = storage.Get<List<UserModel>>("userInfo");
                     
                     var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
@@ -75,8 +79,8 @@ namespace InterviewSiddhant_Gauchan.Controllers
                     identity.AddClaim(new Claim(ClaimTypes.Name, user[0].FullName));
                     identity.AddClaim(new Claim(ClaimTypes.Email, string.Join(",", user[0].Emails)));
                     identity.AddClaim(new Claim(ClaimTypes.MobilePhone, string.Join(",",user[0].Phones)));
-                    identity.AddClaim(new Claim(ClaimTypes.Expiration, string.Join(",", accessToken.ExpiryDate)));
-                    identity.AddClaim(new Claim("RefreshToken", string.Join(",", accessToken.RefreshToken)));
+                    identity.AddClaim(new Claim(ClaimTypes.Expiration, string.Join(",", result.Response.ExpiryDate)));
+                    identity.AddClaim(new Claim("RefreshToken", string.Join(",", result.Response.RefreshToken)));
                     var principal = new ClaimsPrincipal(identity);
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, 
@@ -85,7 +89,7 @@ namespace InterviewSiddhant_Gauchan.Controllers
                         IsPersistent = true, 
                         ExpiresUtc = DateTime.UtcNow.AddMinutes(20) 
                     });
-                    return Ok(accessToken);
+                    return Ok(result.Response);
                 }
 
             }

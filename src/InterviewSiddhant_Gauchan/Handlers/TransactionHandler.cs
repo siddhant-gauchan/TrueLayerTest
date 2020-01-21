@@ -1,14 +1,17 @@
 ﻿using InterviewSiddhant_Gauchan.Helpers;
 using InterviewSiddhant_Gauchan.Model;
 using InterviewSiddhant_Gauchan.Services;
+using MediatR;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using TrulayerApiTest.Handlers.Query;
 
 namespace InterviewSiddhant_Gauchan.Handlers
 {
-    public interface ITransactionHandler
+    public interface ITransactionHandler: IRequestHandler<GetTransactionQuery,TransactionResponse>
     {
-        Task<List<TransactionViewModel>> Get();
+        
     }
 
     public class TransactionHandler : ITransactionHandler
@@ -23,15 +26,16 @@ namespace InterviewSiddhant_Gauchan.Handlers
             this.transactionService = transactionService;
             this.storage = storage;
         }
+               
 
-        public async Task<List<TransactionViewModel>> Get()
+        public  async Task<TransactionResponse> Handle(GetTransactionQuery request, CancellationToken cancellationToken)
         {
             var transactionViewModel = new List<TransactionViewModel>();
             var bankAccounts = await accountService.GetAllBankAccounts();
             foreach (var item in bankAccounts)
             {
                 var result = await transactionService.GetTransactionByAccountId(item.AccountId);
-                transactionViewModel.Add( new TransactionViewModel
+                transactionViewModel.Add(new TransactionViewModel
                 {
                     Account =
                     new AccountModel
@@ -45,7 +49,7 @@ namespace InterviewSiddhant_Gauchan.Handlers
 
             }
             storage.Store(transactionViewModel, "transactionViewModel");
-            return transactionViewModel;
+            return new TransactionResponse { Response= transactionViewModel};
         }
     }
 }

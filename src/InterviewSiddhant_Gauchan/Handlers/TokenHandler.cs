@@ -1,5 +1,6 @@
 ﻿using InterviewSiddhant_Gauchan.Helpers;
 using InterviewSiddhant_Gauchan.Services;
+using MediatR;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
@@ -7,13 +8,15 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using TrulayerApiTest.Handlers.Query;
 
 namespace InterviewSiddhant_Gauchan.Handlers
 {
-    public interface ITokenHandler
+    public interface ITokenHandler: IRequestHandler<GetTokenQuery, TokenRespose>
     {
-        Task<TokenDetails> GetToken(string accessCode);
+       
         Task<TokenDetails> GetTokenByRefreshToken();
     }
     public class TokenHandler : ITokenHandler
@@ -30,49 +33,7 @@ namespace InterviewSiddhant_Gauchan.Handlers
             this.tokenStorage = tokenStorage;
             this.userService = userService;
         }
-
-
-        public async Task<TokenDetails> GetToken(string accessCode)
-        {
-
-            var content = new FormUrlEncodedContent(new[]
-            {
-             new KeyValuePair<string, string>("grant_type", "authorization_code")
-            ,new KeyValuePair<string, string>("code", accessCode)
-            ,new KeyValuePair<string, string>("redirect_uri", config.Value.RedirectUri)
-            ,new KeyValuePair<string, string>("client_id", config.Value.ClientId)
-            ,new KeyValuePair<string, string>("client_secret", config.Value.ClientSecret)
-            });
-
-            var client = httpHelpers.GetClient(config.Value.OAuthServerUrl);
-            var response = await client.PostAsync("/connect/token", content);
-            if (response.IsSuccessStatusCode)
-            {
-                dynamic result = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
-                var jwtSecurityHandler = new JwtSecurityTokenHandler();
-                var token = (JwtSecurityToken)jwtSecurityHandler.ReadJwtToken(result.access_token.ToString());
-                
-
-                var tokens = new TokenDetails
-                {
-                    AccessToken = result.access_token,
-                    RefreshToken = accessCode,
-                    ExpiryDate = FromUnixTime(token.Claims.Where(x => x.Type == "exp").FirstOrDefault().Value)
-                };
-
-                tokenStorage.Clear();
-                tokenStorage.Store(tokens, config.Value.TokenKey);
-
-                var user = await userService.GetInfo();
-                tokenStorage.Store(user, "userInfo");  
-
-                return tokens;
-            }
-            return new TokenDetails();
-
-        }
-
-        public async Task<TokenDetails> GetTokenByRefreshToken()
+          public async Task<TokenDetails> GetTokenByRefreshToken()
         {
             //TODO : It returns badRequest. Need to fix it             
             var content = new FormUrlEncodedContent(new[]
@@ -112,6 +73,44 @@ namespace InterviewSiddhant_Gauchan.Handlers
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return epoch.AddSeconds(Convert.ToDouble(unixTime));
+        }
+
+        public async Task<TokenRespose> Handle(GetTokenQuery request, CancellationToken cancellationToken)
+        {
+            var content = new FormUrlEncodedContent(new[]
+           {
+             new KeyValuePair<string, string>("grant_type", "authorization_code")
+            ,new KeyValuePair<string, string>("code", request.AccessCode)
+            ,new KeyValuePair<string, string>("redirect_uri", config.Value.RedirectUri)
+            ,new KeyValuePair<string, string>("client_id", config.Value.ClientId)
+            ,new KeyValuePair<string, string>("client_secret", config.Value.ClientSecret)
+            });
+
+            var client = httpHelpers.GetClient(config.Value.OAuthServerUrl);
+            var response = await client.PostAsync("/connect/token", content);
+            if (response.IsSuccessStatusCode)
+            {
+                dynamic result = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
+                var jwtSecurityHandler = new JwtSecurityTokenHandler();
+                var token = (JwtSecurityToken)jwtSecurityHandler.ReadJwtToken(result.access_token.ToString());
+
+
+                var tokens = new TokenDetails
+                {
+                    AccessToken = result.access_token,
+                    RefreshToken = request.AccessCode,
+                    ExpiryDate = FromUnixTime(token.Claims.Where(x => x.Type == "exp").FirstOrDefault().Value)
+                };
+
+                tokenStorage.Clear();
+                tokenStorage.Store(tokens, config.Value.TokenKey);
+
+                var user = await userService.GetInfo();
+                tokenStorage.Store(user, "userInfo");
+
+                return new TokenRespose { Response = tokens };
+            }
+            return new TokenRespose();
         }
     }
 }

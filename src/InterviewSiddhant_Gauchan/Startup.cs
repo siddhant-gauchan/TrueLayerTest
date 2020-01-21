@@ -1,6 +1,7 @@
 ﻿using InterviewSiddhant_Gauchan.Handlers;
 using InterviewSiddhant_Gauchan.Helpers;
 using InterviewSiddhant_Gauchan.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +54,7 @@ namespace InterviewSiddhant_Gauchan
             services.AddTransient<ITokenHandler, TokenHandler>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMediatR(typeof(TokenHandler).GetTypeInfo().Assembly);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -143,6 +145,7 @@ namespace InterviewSiddhant_Gauchan
                 MinimumSameSitePolicy = SameSiteMode.Strict,
             };
             app.UseCookiePolicy(cookiePolicyOptions);
+            
         }
 
 

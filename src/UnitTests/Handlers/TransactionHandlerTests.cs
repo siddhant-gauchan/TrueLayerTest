@@ -6,7 +6,9 @@ using InterviewSiddhant_Gauchan.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using TrulayerApiTest.Handlers.Query;
 
 namespace UnitTests.Handlers
 {
@@ -43,9 +45,9 @@ namespace UnitTests.Handlers
 
             var handler = new TransactionHandler(mockAccountService.Object, mockTransactionService.Object, mockStorage.Object);
 
-            var response = await handler.Get();
-            Assert.IsTrue(response.Count>0);
-            Assert.IsInstanceOfType(response, typeof(List<TransactionViewModel>));
+            var result = await handler.Handle(It.IsAny<GetTransactionQuery>(),It.IsAny<CancellationToken>());
+            Assert.IsTrue(result.Response.Count>0);
+            Assert.IsInstanceOfType(result.Response, typeof(List<TransactionViewModel>));
         }
 
         [TestMethod]
@@ -60,9 +62,9 @@ namespace UnitTests.Handlers
            
             var handler = new TransactionHandler(mockAccountService.Object, mockTransactionService.Object, mockStorage.Object);
 
-            var response = await handler.Get();
-            Assert.IsTrue(response.Count==0);
-            Assert.IsInstanceOfType(response, typeof(List<TransactionViewModel>));
+            var result = await handler.Handle(It.IsAny<GetTransactionQuery>(), It.IsAny<CancellationToken>());
+            Assert.IsTrue(result.Response.Count==0);
+            Assert.IsInstanceOfType(result.Response, typeof(List<TransactionViewModel>));
         }
 
         [TestMethod]
@@ -86,10 +88,10 @@ namespace UnitTests.Handlers
             
             var handler = new TransactionHandler(mockAccountService.Object, mockTransactionService.Object, mockStorage.Object);
 
-            var response = await handler.Get();
-            
-            Assert.IsTrue(response.Count == 0);
-            Assert.IsInstanceOfType(response, typeof(List<TransactionViewModel>));
+            var result = await handler.Handle(It.IsAny<GetTransactionQuery>(), It.IsAny<CancellationToken>());
+
+            Assert.IsTrue(result.Response.Count == 0);
+            Assert.IsInstanceOfType(result.Response, typeof(List<TransactionViewModel>));
         }
     }
 }

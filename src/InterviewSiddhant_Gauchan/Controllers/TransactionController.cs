@@ -1,8 +1,9 @@
-﻿using InterviewSiddhant_Gauchan.Handlers;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using TrulayerApiTest.Handlers.Query;
 
 namespace InterviewSiddhant_Gauchan.Controllers
 {
@@ -11,13 +12,13 @@ namespace InterviewSiddhant_Gauchan.Controllers
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class TransactionController : ControllerBase
     {
-        private readonly ITransactionHandler transactionsHandler;
-        private readonly ITransactionSummaryHandler transactionSummaryHandler;
+        
+        private readonly IMediator mediator;
 
-        public TransactionController(ITransactionHandler transactionsHandler,ITransactionSummaryHandler transactionSummaryHandler)
+        public TransactionController(IMediator mediator)
         {
-            this.transactionsHandler = transactionsHandler;
-            this.transactionSummaryHandler = transactionSummaryHandler;
+            
+            this.mediator = mediator;
         }
         
         [HttpGet]
@@ -27,8 +28,8 @@ namespace InterviewSiddhant_Gauchan.Controllers
         {
             try
             {
-                var result = await transactionsHandler.Get();
-                return Ok(result);
+                var result = await mediator.Send(new GetTransactionQuery());                    
+                return Ok(result.Response);
             }
             catch (System.Exception ex)
             {
@@ -39,12 +40,12 @@ namespace InterviewSiddhant_Gauchan.Controllers
         [HttpGet]
         [Authorize]
         [Route("transactions/summary")]
-        public ActionResult GetSummary()
+        public async Task<ActionResult> GetSummary()
         {
             try
             {
-                var result = transactionSummaryHandler.Get();
-                return Ok(result);
+                var result = await mediator.Send(new GetTransactionSummaryQuery());
+                return Ok(result.Response);
             }
             catch (System.Exception ex)
             {

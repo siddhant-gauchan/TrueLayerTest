@@ -2,12 +2,15 @@ using InterviewSiddhant_Gauchan;
 using InterviewSiddhant_Gauchan.Controllers;
 using InterviewSiddhant_Gauchan.Handlers;
 using InterviewSiddhant_Gauchan.Model;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using TrulayerApiTest.Handlers.Query;
 
 namespace UnitTests
 {
@@ -18,10 +21,8 @@ namespace UnitTests
         public async Task ShouldReturnTransactionViewModelWithDataForTransationEndpoint()
         {
             //arrange
-            var mockTransactionHandler = new Mock<ITransactionHandler>();
-            var mockTransactionSummaryHandler = new Mock<ITransactionSummaryHandler>();
-            mockTransactionHandler.Setup(x => x.Get()).ReturnsAsync(
-                new List<TransactionViewModel>
+            var mockMediator = new Mock<IMediator>();
+            var res = new List<TransactionViewModel>
                             {
                               new TransactionViewModel
                                 {
@@ -39,9 +40,10 @@ namespace UnitTests
                                         TransactionType = "testTransactionType" }
                                         }
                                 }
-                });
+                };
+            mockMediator.Setup(x => x.Send(It.IsAny<GetTransactionQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new TransactionResponse { Response = res });
 
-            var controller = new TransactionController(mockTransactionHandler.Object, mockTransactionSummaryHandler.Object);
+            var controller = new TransactionController(mockMediator.Object);
             //act
             var response = await controller.Get() as ObjectResult;
             var result = response.Value as List<TransactionViewModel>;
@@ -56,11 +58,10 @@ namespace UnitTests
         public async Task ShouldReturnInternalServerErrorWhenExceptionOccursForTransactionEndPoint()
         {
             //arrange
-            var mockTransactionHandler = new Mock<ITransactionHandler>();
-            var mockTransactionSummaryHandler = new Mock<ITransactionSummaryHandler>();
-            mockTransactionHandler.Setup(x => x.Get()).Throws(new System.Exception());
+            var mockMediator = new Mock<IMediator>();
+            mockMediator.Setup(x => x.Send(It.IsAny<GetTransactionSummaryQuery>(), It.IsAny<CancellationToken>())).ThrowsAsync(new System.Exception());
 
-            var controller = new TransactionController(mockTransactionHandler.Object, mockTransactionSummaryHandler.Object);
+            var controller = new TransactionController(mockMediator.Object);
             //act
             var response = await controller.Get() as ObjectResult;
 
@@ -71,16 +72,15 @@ namespace UnitTests
         }
 
         [TestMethod]        
-        public void ShouldReturnTransactionSummaryViewModelForTransactionSummaryEndPoint()
+        public async Task  ShouldReturnTransactionSummaryViewModelForTransactionSummaryEndPoint()
         {
             //arrange
-            var mockTransactionHandler = new Mock<ITransactionHandler>();
-            var mockTransactionSummaryHandler = new Mock<ITransactionSummaryHandler>();
-            mockTransactionSummaryHandler.Setup(x => x.Get()).Returns(new List<TransactionSummaryViewModel> { });
-            var controller = new TransactionController(mockTransactionHandler.Object, mockTransactionSummaryHandler.Object);
+            var mockMediator = new Mock<IMediator>();
+            mockMediator.Setup(x => x.Send(It.IsAny<GetTransactionSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new TransactionSummaryResponse { Response= new List<TransactionSummaryViewModel> { } });
+            var controller = new TransactionController(mockMediator.Object);
 
             //act
-            var response = controller.GetSummary() as ObjectResult;
+            var response = await controller.GetSummary() as ObjectResult;
 
             //assert
             Assert.IsInstanceOfType(response.Value, typeof(List<TransactionSummaryViewModel>));
@@ -89,16 +89,16 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void ShouldReturnInternalServerErrorWhenExceptionOccursForTransactionSummaryEndPoint()
+        public async Task ShouldReturnInternalServerErrorWhenExceptionOccursForTransactionSummaryEndPoint()
         {
             //arrange
-            var mockTransactionHandler = new Mock<ITransactionHandler>();
-            var mockTransactionSummaryHandler = new Mock<ITransactionSummaryHandler>();
-            mockTransactionSummaryHandler.Setup(x => x.Get()).Throws(new System.Exception());
-            var controller = new TransactionController(mockTransactionHandler.Object, mockTransactionSummaryHandler.Object);
+           
+            var mockMediator = new Mock<IMediator>();
+            mockMediator.Setup(x => x.Send(It.IsAny<GetTransactionSummaryQuery>(),It.IsAny<CancellationToken>())).ThrowsAsync(new System.Exception());
+            var controller = new TransactionController(mockMediator.Object);
 
             //act
-            var response = controller.GetSummary() as ObjectResult;
+            var response = await controller.GetSummary() as ObjectResult;
 
             //assert
             Assert.AreEqual(StatusCodes.Status500InternalServerError, response.StatusCode);
