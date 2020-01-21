@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace InterviewSiddhant_Gauchan
+namespace TrulayerApiTest
 {
     public class Program
     {

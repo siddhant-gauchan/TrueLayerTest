@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using InterviewSiddhant_Gauchan.Handlers;
-using InterviewSiddhant_Gauchan.Helpers;
-using InterviewSiddhant_Gauchan.Model;
+using TrulayerApiTest.Handlers;
+using TrulayerApiTest.Helpers;
+using TrulayerApiTest.Model;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using TrulayerApiTest.Handlers.Query;
 
-namespace InterviewSiddhant_Gauchan.Controllers
+namespace TrulayerApiTest.Controllers
 {
     [ApiController]
     public class AccountController : ControllerBase

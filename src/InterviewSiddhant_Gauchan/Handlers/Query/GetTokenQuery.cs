@@ -1,4 +1,4 @@
-﻿using InterviewSiddhant_Gauchan;
+﻿using TrulayerApiTest;
 using MediatR;
 
 namespace TrulayerApiTest.Handlers.Query

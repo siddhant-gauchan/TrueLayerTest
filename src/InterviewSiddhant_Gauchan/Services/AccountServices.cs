@@ -1,4 +1,4 @@
-﻿using InterviewSiddhant_Gauchan.Helpers;
+﻿using TrulayerApiTest.Helpers;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace InterviewSiddhant_Gauchan.Services
+namespace TrulayerApiTest.Services
 {
     public class AccountService : IAccountService
     {

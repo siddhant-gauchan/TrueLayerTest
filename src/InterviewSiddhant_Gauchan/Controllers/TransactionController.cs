@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TrulayerApiTest.Handlers.Query;
 
-namespace InterviewSiddhant_Gauchan.Controllers
+namespace TrulayerApiTest.Controllers
 {
     [Route("api/")]
     [ApiController]

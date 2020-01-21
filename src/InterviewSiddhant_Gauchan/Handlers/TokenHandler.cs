@@ -1,5 +1,5 @@
-﻿using InterviewSiddhant_Gauchan.Helpers;
-using InterviewSiddhant_Gauchan.Services;
+﻿using TrulayerApiTest.Helpers;
+using TrulayerApiTest.Services;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrulayerApiTest.Handlers.Query;
 
-namespace InterviewSiddhant_Gauchan.Handlers
+namespace TrulayerApiTest.Handlers
 {
     public interface ITokenHandler: IRequestHandler<GetTokenQuery, TokenRespose>
     {

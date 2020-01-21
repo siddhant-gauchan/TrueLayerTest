@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace InterviewSiddhant_Gauchan.Helpers
+namespace TrulayerApiTest.Helpers
 {
     public interface IHttpHelpers
     {

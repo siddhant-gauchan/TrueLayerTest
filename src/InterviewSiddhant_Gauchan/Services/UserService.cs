@@ -1,12 +1,12 @@
-﻿using InterviewSiddhant_Gauchan.Helpers;
-using InterviewSiddhant_Gauchan.Model;
+﻿using TrulayerApiTest.Helpers;
+using TrulayerApiTest.Model;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace InterviewSiddhant_Gauchan.Services
+namespace TrulayerApiTest.Services
 {
     public class UserService : IUserService
     {

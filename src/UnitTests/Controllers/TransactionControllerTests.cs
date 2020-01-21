@@ -1,7 +1,7 @@
-using InterviewSiddhant_Gauchan;
-using InterviewSiddhant_Gauchan.Controllers;
-using InterviewSiddhant_Gauchan.Handlers;
-using InterviewSiddhant_Gauchan.Model;
+using TrulayerApiTest;
+using TrulayerApiTest.Controllers;
+using TrulayerApiTest.Handlers;
+using TrulayerApiTest.Model;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,6 @@
-﻿using InterviewSiddhant_Gauchan.Handlers;
-using InterviewSiddhant_Gauchan.Helpers;
-using InterviewSiddhant_Gauchan.Services;
+﻿using TrulayerApiTest.Handlers;
+using TrulayerApiTest.Helpers;
+using TrulayerApiTest.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace InterviewSiddhant_Gauchan
+namespace TrulayerApiTest
 {
     public class Startup
     {

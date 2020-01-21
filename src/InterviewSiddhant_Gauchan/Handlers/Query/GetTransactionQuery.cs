@@ -1,4 +1,4 @@
-﻿using InterviewSiddhant_Gauchan.Model;
+﻿using TrulayerApiTest.Model;
 using MediatR;
 using System.Collections.Generic;
 

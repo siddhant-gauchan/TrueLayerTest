@@ -1,6 +1,6 @@
 ﻿using Hanssens.Net;
 
-namespace InterviewSiddhant_Gauchan.Helpers
+namespace TrulayerApiTest.Helpers
 {
     public interface IStorage
     {

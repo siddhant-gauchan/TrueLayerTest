@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace InterviewSiddhant_Gauchan.Model
+namespace TrulayerApiTest.Model
 {
     public class TransactionViewModel
     {

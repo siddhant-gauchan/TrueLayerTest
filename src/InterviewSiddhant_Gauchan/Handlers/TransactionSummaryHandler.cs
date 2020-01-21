@@ -1,5 +1,5 @@
-﻿using InterviewSiddhant_Gauchan.Helpers;
-using InterviewSiddhant_Gauchan.Model;
+﻿using TrulayerApiTest.Helpers;
+using TrulayerApiTest.Model;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrulayerApiTest.Handlers.Query;
 
-namespace InterviewSiddhant_Gauchan.Handlers
+namespace TrulayerApiTest.Handlers
 {
     public interface ITransactionSummaryHandler : IRequestHandler<GetTransactionSummaryQuery, TransactionSummaryResponse>
     {        

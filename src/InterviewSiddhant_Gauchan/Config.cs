@@ -1,4 +1,4 @@
-﻿namespace InterviewSiddhant_Gauchan.Helpers
+﻿namespace TrulayerApiTest.Helpers
 {
     public class Config
     {

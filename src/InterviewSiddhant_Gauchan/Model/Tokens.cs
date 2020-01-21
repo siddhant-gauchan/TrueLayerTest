@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InterviewSiddhant_Gauchan
+namespace TrulayerApiTest
 {
     public class TokenDetails
     {

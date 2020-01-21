@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace InterviewSiddhant_Gauchan.Model
+namespace TrulayerApiTest.Model
 {
     public class AddressModel
     {

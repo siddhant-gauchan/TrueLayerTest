@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace InterviewSiddhant_Gauchan
+namespace TrulayerApiTest
 {
     public class AccountModel
     {
